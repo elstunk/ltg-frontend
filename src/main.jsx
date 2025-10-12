@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 
-const API = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+// SINGLE source of truth for the backend URL
+const API_BASE =
+  (import.meta.env.VITE_API_URL || "https://ltg-backend.onrender.com")
+    .replace(/\/+$/, ""); // trim trailing slash
 
 function App() {
   const [data, setData] = useState(null);
@@ -10,16 +13,19 @@ function App() {
     e.preventDefault();
     const email = prompt("Email to sign in:");
     if (!email) return;
-    await fetch(`${API}/api/auth/request-link`, {
+
+    await fetch(`${API_BASE}/api/auth/request-link`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
+
     alert("If that email exists, a sign-in link was sent.");
   }
 
   useEffect(() => {
-    fetch(`${API}/api/tournament/demo/research`)
+    console.log("Using API_BASE =", API_BASE); // sanity log
+    fetch(`${API_BASE}/api/tournament/demo/research`)
       .then((r) => r.json())
       .then(setData)
       .catch(console.error);
@@ -37,7 +43,7 @@ function App() {
       <ul>
         {data.player_form?.map((p) => (
           <li key={p.player_id}>
-            {p.name} — {p.last8_avg.toFixed(1)}
+            {p.name} – {p.last8_avg.toFixed(1)}
           </li>
         ))}
       </ul>
@@ -46,3 +52,4 @@ function App() {
 }
 
 createRoot(document.getElementById("root")).render(<App />);
+
