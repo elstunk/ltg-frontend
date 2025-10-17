@@ -1,0 +1,29 @@
+/* Hover animation shared by all tourney cards */
+.tourney-card {
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.tourney-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+/* Chip style (quick-picks) */
+.tourney-chip {
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.tourney-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+/* Featured card extras */
+.tourney-card.featured {
+  background: linear-gradient(135deg, #2a5cff 0%, #111 100%);
+  border: none;
+  color: #fff;
+}
+.tourney-card.featured:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0,0,0,.18);
+}
