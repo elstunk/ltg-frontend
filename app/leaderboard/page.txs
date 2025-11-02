@@ -1,0 +1,57 @@
+"use client";
+import { useEffect, useState } from "react";
+
+type Entry = {
+  player_id: string;
+  name: string;
+  pos: string;
+  score: number;
+  thru: string;
+  today: number;
+};
+
+export default function LeaderboardPage() {
+  const [data, setData] = useState<Entry[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/leaderboard/1`, {
+        cache: "no-store",
+      });
+      const json = await res.json();
+      setData(json.entries || []);
+      setLoading(false);
+    })();
+  }, []);
+
+  if (loading) return <div className="p-6 text-gray-600">Loading leaderboard...</div>;
+
+  return (
+    <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Leaderboard</h1>
+      <table className="w-full border border-gray-300">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="p-2 border">Pos</th>
+            <th className="p-2 border">Player</th>
+            <th className="p-2 border">Score</th>
+            <th className="p-2 border">Thru</th>
+            <th className="p-2 border">Today</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((p) => (
+            <tr key={p.player_id} className="text-center border-t">
+              <td className="p-2">{p.pos}</td>
+              <td className="p-2 text-left">{p.name}</td>
+              <td className="p-2">{p.score}</td>
+              <td className="p-2">{p.thru}</td>
+              <td className="p-2">{p.today}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
